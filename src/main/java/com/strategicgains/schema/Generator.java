@@ -45,7 +45,7 @@ public class Generator
 		AnnotationProvider provider = new SyntaxeAnnotationProvider();
 		Generator generator = new Generator(provider);
 		ClassLoader cl = Generator.class.getClassLoader();
-		Class<?> sample = cl.loadClass(args[1]);
+		Class<?> sample = cl.loadClass(args[0]);
 		JsonNode schema = generator.generateSchema(sample);
 		System.out.println(schema.toPrettyString());
 	}
