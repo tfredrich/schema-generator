@@ -2,15 +2,18 @@ package com.strategicgains.schema;
 
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+
 import org.junit.Test;
 
 public class GeneratorTest
 {
 	@Test
 	public void testSingleClass()
-	throws ClassNotFoundException
+	throws ClassNotFoundException, MalformedURLException, FileNotFoundException
 	{
-		String[] args = {"com.strategicgains.schema.Sample"};
+		String[] args = {"./target/test-classes", "com.strategicgains.schema.Sample"};
 
 		Generator.main(args);
 	}

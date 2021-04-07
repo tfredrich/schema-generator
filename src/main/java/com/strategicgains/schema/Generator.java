@@ -1,6 +1,11 @@
 package com.strategicgains.schema;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.victools.jsonschema.generator.OptionPreset;
@@ -40,12 +45,17 @@ public class Generator
 	}
 
 	public static void main(String[] args)
-	throws ClassNotFoundException
+	throws ClassNotFoundException, MalformedURLException, FileNotFoundException
 	{
 		AnnotationProvider provider = new SyntaxeAnnotationProvider();
 		Generator generator = new Generator(provider);
-		ClassLoader cl = Generator.class.getClassLoader();
-		Class<?> sample = cl.loadClass(args[0]);
+
+		File file = new File(args[0]);
+		if (!file.canRead()) throw new FileNotFoundException(args[0]);
+
+		URL[] urls = new URL[] {file.toURI().toURL()};
+		URLClassLoader cl = new URLClassLoader(urls, generator.getClass().getClassLoader());
+		Class<?> sample = cl.loadClass(args[1]);
 		JsonNode schema = generator.generateSchema(sample);
 		System.out.println(schema.toPrettyString());
 	}
