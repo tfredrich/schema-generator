@@ -1,9 +1,8 @@
 package com.strategicgains.schema;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -45,18 +44,49 @@ public class Generator
 	}
 
 	public static void main(String[] args)
-	throws ClassNotFoundException, MalformedURLException, FileNotFoundException
 	{
+		if (args.length < 2)
+		{
+			usage();
+		}
+
 		AnnotationProvider provider = new SyntaxeAnnotationProvider();
 		Generator generator = new Generator(provider);
 
 		File file = new File(args[0]);
-		if (!file.canRead()) throw new FileNotFoundException(args[0]);
+		if (!file.canRead()) usage();
 
-		URL[] urls = new URL[] {file.toURI().toURL()};
-		URLClassLoader cl = new URLClassLoader(urls, generator.getClass().getClassLoader());
-		Class<?> sample = cl.loadClass(args[1]);
-		JsonNode schema = generator.generateSchema(sample);
-		System.out.println(schema.toPrettyString());
+		URLClassLoader cl = null;
+
+		try
+		{
+			URL[] urls = new URL[] {file.toURI().toURL()};
+			cl = new URLClassLoader(urls, generator.getClass().getClassLoader());
+			Class<?> sample = cl.loadClass(args[1]);
+			JsonNode schema = generator.generateSchema(sample);
+			System.out.println(schema.toPrettyString());
+		}
+		catch(Exception e)
+		{
+			usage();
+		}
+		finally
+		{
+			if (cl != null)
+				try
+				{
+					cl.close();
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+		}
+	}
+
+	private static void usage()
+	{
+		System.out.println("Usage: generator jar-filename fully-qualified-classname");
+		System.exit(1);
 	}
 }

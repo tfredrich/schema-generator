@@ -77,12 +77,16 @@ implements AnnotationProvider
 	@Override
 	public String getDescription(TypeScope s)
 	{
-		return "JSON Schema definition for " + s.getSimpleTypeDescription();
+		if (!FieldScope.class.isAssignableFrom(s.getClass()))
+			return "JSON Schema definition for " + s.getSimpleTypeDescription();
+		return null;
 	}
 
 	@Override
 	public String getTitle(TypeScope s)
 	{
-		return s.getSimpleTypeDescription();
+		if (!FieldScope.class.isAssignableFrom(s.getClass()))
+			return s.getSimpleTypeDescription();
+		return null;
 	}
 }
