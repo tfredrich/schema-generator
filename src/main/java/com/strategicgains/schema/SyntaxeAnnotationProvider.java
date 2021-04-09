@@ -7,6 +7,12 @@ import java.util.UUID;
 import com.github.victools.jsonschema.generator.FieldScope;
 import com.github.victools.jsonschema.generator.TypeScope;
 import com.strategicgains.syntaxe.annotation.CollectionValidation;
+import com.strategicgains.syntaxe.annotation.DateValidation;
+import com.strategicgains.syntaxe.annotation.DoubleValidation;
+import com.strategicgains.syntaxe.annotation.FloatValidation;
+import com.strategicgains.syntaxe.annotation.IntegerValidation;
+import com.strategicgains.syntaxe.annotation.LongValidation;
+import com.strategicgains.syntaxe.annotation.Required;
 import com.strategicgains.syntaxe.annotation.StringValidation;
 
 public class SyntaxeAnnotationProvider
@@ -71,6 +77,30 @@ implements AnnotationProvider
 	@Override
 	public boolean isRequired(FieldScope scope)
 	{
+		Required r = scope.getAnnotation(Required.class);
+		if (r != null) return true;
+
+		StringValidation s = scope.getAnnotation(StringValidation.class);
+		if (s != null) return s.required();
+
+		DateValidation dt = scope.getAnnotation(DateValidation.class);
+		if (dt != null) return dt.required();
+
+		CollectionValidation c = scope.getAnnotation(CollectionValidation.class);
+		if (c != null) return !c.isNullable();
+
+		IntegerValidation i = scope.getAnnotation(IntegerValidation.class);
+		if (i != null) return !i.isNullable();
+
+		FloatValidation f = scope.getAnnotation(FloatValidation.class);
+		if (f != null) return !f.isNullable();
+
+		DoubleValidation d = scope.getAnnotation(DoubleValidation.class);
+		if (d != null) return !d.isNullable();
+
+		LongValidation l = scope.getAnnotation(LongValidation.class);
+		if (l != null) return !l.isNullable();
+
 		return false;
 	}
 
