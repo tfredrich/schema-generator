@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 import com.github.victools.jsonschema.generator.FieldScope;
 import com.github.victools.jsonschema.generator.TypeScope;
 
-public interface AnnotationProvider {
-
+public interface AnnotationProvider
+{
 	String getFormat(FieldScope scope);
 
 	Integer getMaxItems(FieldScope scope);
@@ -29,4 +29,5 @@ public interface AnnotationProvider {
 
 	String getTitle(TypeScope s);
 
+	String getId(TypeScope s);
 }

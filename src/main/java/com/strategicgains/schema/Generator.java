@@ -22,6 +22,7 @@ public class Generator
 		super();
 		SchemaGeneratorConfigBuilder builder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2019_09, OptionPreset.PLAIN_JSON);
 		builder.forTypesInGeneral()
+			.withIdResolver(provider::getId)
 			.withDescriptionResolver(provider::getDescription)
 			.withTitleResolver(provider::getTitle);
 			builder.forFields()

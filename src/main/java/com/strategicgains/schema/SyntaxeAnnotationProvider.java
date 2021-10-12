@@ -18,6 +18,19 @@ import com.strategicgains.syntaxe.annotation.StringValidation;
 public class SyntaxeAnnotationProvider
 implements AnnotationProvider
 {
+	private String baseUrl = "https://schema.autheus.com/";
+
+	public SyntaxeAnnotationProvider()
+	{
+		super();
+	}
+
+	public SyntaxeAnnotationProvider(String baseUrl)
+	{
+		this();
+		this.baseUrl = baseUrl;
+	}
+
 	@Override
 	public String getFormat(FieldScope scope)
 	{
@@ -117,6 +130,13 @@ implements AnnotationProvider
 	{
 		if (!FieldScope.class.isAssignableFrom(s.getClass()))
 			return s.getSimpleTypeDescription();
+		return null;
+	}
+	@Override
+	public String getId(TypeScope s)
+	{
+		if (!FieldScope.class.isAssignableFrom(s.getClass()))
+			return baseUrl + s.getSimpleTypeDescription() + ".json";
 		return null;
 	}
 }
