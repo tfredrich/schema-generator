@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.strategicgains.syntaxe.annotation.ChildValidation;
 import com.strategicgains.syntaxe.annotation.CollectionValidation;
 import com.strategicgains.syntaxe.annotation.DoubleValidation;
@@ -38,4 +40,7 @@ extends Base<UUID>
 
 	@CollectionValidation
 	private List<Integer> indexes;
+
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private String password;
 }

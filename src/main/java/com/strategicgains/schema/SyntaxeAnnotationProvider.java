@@ -1,9 +1,13 @@
 package com.strategicgains.schema;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.victools.jsonschema.generator.FieldScope;
 import com.github.victools.jsonschema.generator.TypeScope;
 import com.strategicgains.syntaxe.annotation.CollectionValidation;
@@ -18,7 +22,15 @@ import com.strategicgains.syntaxe.annotation.StringValidation;
 public class SyntaxeAnnotationProvider
 implements AnnotationProvider
 {
-	private String baseUrl = "https://schema.autheus.com/";
+	private static final String DEFAULT_BASE_URL = "https://schema.autheus.com/";
+	private static final String[] DEFAULT_READONLY_PROPERTIES = {
+			"id",
+			"createdAt",
+			"updatedAt"
+	};
+	private String baseUrl = DEFAULT_BASE_URL;
+	private Set<String> readOnlyProperties = new HashSet<>(Arrays.asList(DEFAULT_READONLY_PROPERTIES));
+	private Set<String> writeOnlyProperties = new HashSet<>();
 
 	public SyntaxeAnnotationProvider()
 	{
@@ -28,7 +40,25 @@ implements AnnotationProvider
 	public SyntaxeAnnotationProvider(String baseUrl)
 	{
 		this();
+		withBaseUrl(baseUrl);
+	}
+
+	public SyntaxeAnnotationProvider withBaseUrl(String baseUrl)
+	{
 		this.baseUrl = baseUrl;
+		return this;
+	}
+
+	public SyntaxeAnnotationProvider withReadOnlyProperties(String[] readOnlyProperties)
+	{
+		this.readOnlyProperties.addAll(Arrays.asList(readOnlyProperties));
+		return this;
+	}
+
+	public SyntaxeAnnotationProvider withWriteOnlyProperties(String[] writeOnlyProperties)
+	{
+		this.writeOnlyProperties.addAll(Arrays.asList(writeOnlyProperties));
+		return this;
 	}
 
 	@Override
@@ -113,6 +143,46 @@ implements AnnotationProvider
 
 		LongValidation l = scope.getAnnotation(LongValidation.class);
 		if (l != null) return !l.isNullable();
+
+		return false;
+	}
+
+	/**
+	 * Mark a field read-only by:
+	 * 1) Adding it to the readOnlyProperties set.
+	 * 2) Annotate it with the Jackson JsonPropery(access = Access.READ_ONLY) annotation.
+	 * 3) Annotate it with the Syntaxe ReadOnly annotation. 
+	 */
+	@Override
+	public boolean isReadOnly(FieldScope scope)
+	{
+		if (readOnlyProperties.contains(scope.getDeclaredName())) return true;
+
+//		ReadOnly readOnly = scope.getAnnotation(ReadOnly.class);
+//		if (readOnly != null) return true;
+
+		JsonProperty annotation = scope.getAnnotation(JsonProperty.class);
+		if (annotation != null) return JsonProperty.Access.READ_ONLY.equals(annotation.access());
+
+		return false;
+	}
+
+	/**
+	 * Mark a field write-only by:
+	 * 1) Adding it to the writeOnlyProperties set.
+	 * 2) Annotate it with the Jackson JsonPropery(access = Access.WRITE_ONLY) annotation.
+	 * 3) Annotate it with the Syntaxe WriteOnly annotation. 
+	 */
+	@Override
+	public boolean isWriteOnly(FieldScope scope)
+	{
+		if (writeOnlyProperties.contains(scope.getDeclaredName())) return true;
+
+//		WriteOnly writeOnly = scope.getAnnotation(WriteOnly.class);
+//		if (writeOnly != null) return true;
+
+		JsonProperty annotation = scope.getAnnotation(JsonProperty.class);
+		if (annotation != null) return JsonProperty.Access.WRITE_ONLY.equals(annotation.access());
 
 		return false;
 	}

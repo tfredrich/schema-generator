@@ -25,16 +25,18 @@ public class Generator
 			.withIdResolver(provider::getId)
 			.withDescriptionResolver(provider::getDescription)
 			.withTitleResolver(provider::getTitle);
-			builder.forFields()
-				.withStringFormatResolver(provider::getFormat)
-				.withArrayMaxItemsResolver(provider::getMaxItems)
-				.withArrayMinItemsResolver(provider::getMinItems)
-				.withNumberInclusiveMaximumResolver(provider::getMaxValue)
-				.withNumberInclusiveMinimumResolver(provider::getMinValue)
-				.withStringMaxLengthResolver(provider::getMaxLength)
-				.withStringMinLengthResolver(provider::getMinLength)
-				.withStringPatternResolver(provider::getPattern)
-				.withRequiredCheck(provider::isRequired);
+		builder.forFields()
+			.withStringFormatResolver(provider::getFormat)
+			.withArrayMaxItemsResolver(provider::getMaxItems)
+			.withArrayMinItemsResolver(provider::getMinItems)
+			.withNumberInclusiveMaximumResolver(provider::getMaxValue)
+			.withNumberInclusiveMinimumResolver(provider::getMinValue)
+			.withStringMaxLengthResolver(provider::getMaxLength)
+			.withStringMinLengthResolver(provider::getMinLength)
+			.withStringPatternResolver(provider::getPattern)
+			.withRequiredCheck(provider::isRequired)
+			.withReadOnlyCheck(provider::isReadOnly)
+			.withWriteOnlyCheck(provider::isWriteOnly);
 		SchemaGeneratorConfig config = builder.build();
 		this.instance = new SchemaGenerator(config);
 	}

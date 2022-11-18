@@ -25,6 +25,10 @@ public interface AnnotationProvider
 
 	boolean isRequired(FieldScope scope);
 
+	boolean isReadOnly(FieldScope scope);
+
+	boolean isWriteOnly(FieldScope scope);
+
 	String getDescription(TypeScope s);
 
 	String getTitle(TypeScope s);

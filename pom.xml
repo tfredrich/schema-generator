@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>com.github.victools</groupId>
 			<artifactId>jsonschema-generator</artifactId>
-			<version>4.16.0</version>
+			<version>4.28.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.strategicgains</groupId>
