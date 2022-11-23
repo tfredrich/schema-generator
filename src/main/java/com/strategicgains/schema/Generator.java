@@ -1,10 +1,12 @@
 package com.strategicgains.schema;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.victools.jsonschema.generator.OptionPreset;
@@ -15,6 +17,10 @@ import com.github.victools.jsonschema.generator.SchemaVersion;
 
 public class Generator
 {
+	private static final String COMMAND_STRING = "o~";
+	private static final CommandLine COMMAND_LINE_PARSER = new CommandLine(COMMAND_STRING);
+	private static final AnnotationProvider SYNTAX_PROVIDER = new SyntaxeAnnotationProvider();
+
 	private SchemaGenerator instance;
 
 	public Generator(AnnotationProvider provider)
@@ -47,27 +53,29 @@ public class Generator
 	}
 
 	public static void main(String[] args)
+	throws CommandLineException, IOException
 	{
-		if (args.length < 2)
-		{
-			usage();
-		}
+		CommandLine commandLine = COMMAND_LINE_PARSER.parse(args);
+		Generator generator = new Generator(SYNTAX_PROVIDER);
 
-		AnnotationProvider provider = new SyntaxeAnnotationProvider();
-		Generator generator = new Generator(provider);
+		String[] arguments = commandLine.getArguments();
+		if (arguments.length < 2) usage();
 
-		File file = new File(args[0]);
+		File file = new File(arguments[0]);
 		if (!file.canRead()) usage();
 
+		ensureOutputDirectory(commandLine.getOptionArgument('o'));
 		URLClassLoader cl = null;
 
 		try
 		{
 			URL[] urls = new URL[] {file.toURI().toURL()};
 			cl = new URLClassLoader(urls, generator.getClass().getClassLoader());
-			Class<?> sample = cl.loadClass(args[1]);
-			JsonNode schema = generator.generateSchema(sample);
-			System.out.println(schema.toPrettyString());
+
+			for (int i = 1; i < arguments.length ; ++i)
+			{
+				generateClassSchema(cl, arguments[i], generator, commandLine.getOptionArgument('o'));
+			}
 		}
 		catch(Exception e)
 		{
@@ -88,9 +96,47 @@ public class Generator
 		}
 	}
 
+	private static void ensureOutputDirectory(String outputDirectory)
+	{
+		if (outputDirectory == null) return;
+
+		File dir = new File(outputDirectory);
+		dir.mkdirs();
+	}
+
+	private static void generateClassSchema(URLClassLoader cl, String className, Generator generator, String outputDirectory)
+	throws ClassNotFoundException, IOException
+	{
+		Class<?> sample = cl.loadClass(className);
+		JsonNode json = generator.generateSchema(sample);
+
+		if (outputDirectory == null) System.out.println(json.toPrettyString());
+		else
+		{
+			output(json, sample.getSimpleName(), new File(outputDirectory));
+		}
+	}
+
+	private static void output(JsonNode schema, String className, File parent)
+	throws IOException
+	{
+		File file = new File(parent, className + ".json");
+		FileWriter writer = null;
+
+		try
+		{
+			writer = new FileWriter(file, Charset.defaultCharset());
+			writer.write(schema.toPrettyString());
+		}
+		finally
+		{
+			if (writer != null) writer.close();
+		}
+	}
+
 	private static void usage()
 	{
-		System.out.println("Usage: generator jar-filename fully-qualified-classname");
+		System.out.println("Usage: generator [-o <output directory>] jar-filename fully-qualified-classname [...]");
 		System.exit(1);
 	}
 }
