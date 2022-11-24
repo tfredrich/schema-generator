@@ -10,7 +10,8 @@ public class GeneratorTest
 	public void testSingleClass()
 	throws ClassNotFoundException, CommandLineException, IOException
 	{
-		String[] args = {"-o", "./target/schema-out", "./target/test-classes", "com.strategicgains.schema.Sample", "com.strategicgains.schema.AnEnumeration"};
+//		String[] args = {"-u", "http://www.example.com/", "-r", "foo,bar,bat", "-w", "sys,boom,bah", "-o", "./target/schema-out", "./target/test-classes", "com.strategicgains.schema.Sample", "com.strategicgains.schema.AnEnumeration"};
+		String[] args = {"-u", "http://www.example.com/", "-r", "foo,bar,bat", "-w", "sys,boom,bah", "./target/test-classes", "com.strategicgains.schema.Sample", "com.strategicgains.schema.AnEnumeration"};
 
 		Generator.main(args);
 	}

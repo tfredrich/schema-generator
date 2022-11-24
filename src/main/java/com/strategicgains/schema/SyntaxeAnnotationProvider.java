@@ -1,6 +1,8 @@
 package com.strategicgains.schema;
 
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -22,28 +24,47 @@ import com.strategicgains.syntaxe.annotation.StringValidation;
 public class SyntaxeAnnotationProvider
 implements AnnotationProvider
 {
-	private static final String DEFAULT_BASE_URL = "https://schema.autheus.com/";
+	private static URL DEFAULT_BASE_URL;
+	static
+	{
+		try
+		{
+			DEFAULT_BASE_URL = new URL("https://schema.autheus.com/");
+		}
+		catch (MalformedURLException e)
+		{
+			e.printStackTrace();
+		}
+	};
 	private static final String[] DEFAULT_READONLY_PROPERTIES = {
 			"id",
 			"createdAt",
 			"updatedAt"
 	};
-	private String baseUrl = DEFAULT_BASE_URL;
+	private URL baseUrl;
 	private Set<String> readOnlyProperties = new HashSet<>(Arrays.asList(DEFAULT_READONLY_PROPERTIES));
 	private Set<String> writeOnlyProperties = new HashSet<>();
 
 	public SyntaxeAnnotationProvider()
 	{
 		super();
+		withBaseUrl(DEFAULT_BASE_URL);
 	}
 
 	public SyntaxeAnnotationProvider(String baseUrl)
+	throws MalformedURLException
 	{
 		this();
 		withBaseUrl(baseUrl);
 	}
 
 	public SyntaxeAnnotationProvider withBaseUrl(String baseUrl)
+	throws MalformedURLException
+	{
+		return withBaseUrl(new URL(baseUrl));
+	}
+
+	public SyntaxeAnnotationProvider withBaseUrl(URL baseUrl)
 	{
 		this.baseUrl = baseUrl;
 		return this;
