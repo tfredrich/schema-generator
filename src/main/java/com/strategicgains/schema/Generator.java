@@ -10,40 +10,32 @@ import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.github.victools.jsonschema.generator.Module;
 import com.github.victools.jsonschema.generator.OptionPreset;
 import com.github.victools.jsonschema.generator.SchemaGenerator;
 import com.github.victools.jsonschema.generator.SchemaGeneratorConfig;
 import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
 import com.github.victools.jsonschema.generator.SchemaVersion;
+import com.github.victools.jsonschema.module.jackson.JacksonModule;
+import com.github.victools.jsonschema.module.jakarta.validation.JakartaValidationModule;
+import com.github.victools.jsonschema.module.javax.validation.JavaxValidationModule;
 
 public class Generator
 {
-	private static final String COMMAND_STRING = "o~r~u~w~";
+	private static final String COMMAND_STRING = "a~o~r~u~w~";
 	private static final CommandLine COMMAND_LINE_PARSER = new CommandLine(COMMAND_STRING);
-	private static final SyntaxeAnnotationProvider SYNTAX_PROVIDER = new SyntaxeAnnotationProvider();
+	private static final ModuleWrapper SYNTAXE = new SyntaxeModule();
+	private static final ModuleWrapper JACKSON = new ModuleWrapperImpl(new JacksonModule());
+	private static final ModuleWrapper JAKARTA = new ModuleWrapperImpl(new JakartaValidationModule());
+	private static final ModuleWrapper JAVAX = new ModuleWrapperImpl(new JavaxValidationModule());
 
 	private SchemaGenerator instance;
 
-	public Generator(AnnotationProvider provider)
+	public Generator(Module module)
 	{
 		super();
-		SchemaGeneratorConfigBuilder builder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2020_12, OptionPreset.PLAIN_JSON);
-		builder.forTypesInGeneral()
-			.withIdResolver(provider::getId)
-			.withDescriptionResolver(provider::getDescription)
-			.withTitleResolver(provider::getTitle);
-		builder.forFields()
-			.withStringFormatResolver(provider::getFormat)
-			.withArrayMaxItemsResolver(provider::getMaxItems)
-			.withArrayMinItemsResolver(provider::getMinItems)
-			.withNumberInclusiveMaximumResolver(provider::getMaxValue)
-			.withNumberInclusiveMinimumResolver(provider::getMinValue)
-			.withStringMaxLengthResolver(provider::getMaxLength)
-			.withStringMinLengthResolver(provider::getMinLength)
-			.withStringPatternResolver(provider::getPattern)
-			.withRequiredCheck(provider::isRequired)
-			.withReadOnlyCheck(provider::isReadOnly)
-			.withWriteOnlyCheck(provider::isWriteOnly);
+		SchemaGeneratorConfigBuilder builder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2020_12, OptionPreset.PLAIN_JSON)
+			.with(module);
 		SchemaGeneratorConfig config = builder.build();
 		this.instance = new SchemaGenerator(config);
 	}
@@ -98,30 +90,54 @@ public class Generator
 	}
 
 	private static Generator createGenerator(CommandLine commandLine)
-	throws MalformedURLException
+	throws MalformedURLException, CommandLineException
 	{
+		ModuleWrapper module = determineModule(commandLine);
+
 		String readOnly = commandLine.getOptionArgument('r');
 
 		if (readOnly != null)
 		{
-			SYNTAX_PROVIDER.withReadOnlyProperties(readOnly.split(",\\s*"));
+			module.withReadOnlyProperties(readOnly.split(",\\s*"));
 		}
 
 		String writeOnly = commandLine.getOptionArgument('w');
 
 		if (writeOnly != null)
 		{
-			SYNTAX_PROVIDER.withWriteOnlyProperties(writeOnly.split(",\\s*"));
+			module.withWriteOnlyProperties(writeOnly.split(",\\s*"));
 		}
 	
 		String baseUrl = commandLine.getOptionArgument('u');
 
 		if (baseUrl != null)
 		{
-			SYNTAX_PROVIDER.withBaseUrl(baseUrl);
+			module.withBaseUrl(baseUrl);
 		}
 
-		return new Generator(SYNTAX_PROVIDER);
+		return new Generator(module);
+	}
+
+	private static ModuleWrapper determineModule(CommandLine commandLine)
+	throws CommandLineException
+	{
+		String provider = commandLine.getOptionArgument('a');
+
+		if (provider == null) return SYNTAXE;
+
+		switch(provider.toLowerCase())
+		{
+			case "javax":
+				return JAVAX;
+			case "jakarta":
+				return JAKARTA;
+			case "jackson":
+				return JACKSON;
+			case "syntaxe":
+				return SYNTAXE;
+
+			default: throw new CommandLineException("Unknown annotation provider: " + provider);
+		}
 	}
 
 	private static File ensureOutputDirectory(String outputDirectory)
@@ -166,6 +182,7 @@ public class Generator
 	private static void usage()
 	{
 		System.out.println("Usage: generator [-r <read-only properties>][-w <write-only properties>][-u <base URL>][-o <output directory>] jar-filename fully-qualified-classname [...]");
+		System.out.println("\t-a <annotation provider> is one of: javax, jakarta, jackson, syntaxe (default).");
 		System.out.println("\t-o <output directory> is the destination for schemas, especially if there are more-than one being generated at once. Otherwise, stdout is used.");
 		System.out.println("\t-r <read-only properties> is a comma-separated string of property names to mark read-only in schema. Default is 'id', 'createdAt' and 'updatedAt'.");
 		System.out.println("\t-u <base URL> is a fully-qualified URL where the schema will end up living (used for $id). Must include the trailing '/'. Default is 'https://schema.autheus.com/.");

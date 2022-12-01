@@ -12,13 +12,29 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <victools.version>4.28.0</victools.version>
   </properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.github.victools</groupId>
 			<artifactId>jsonschema-generator</artifactId>
-			<version>4.28.0</version>
+			<version>${victools.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.github.victools</groupId>
+		    <artifactId>jsonschema-module-jackson</artifactId>
+	    	<version>${victools.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.github.victools</groupId>
+		    <artifactId>jsonschema-module-jakarta-validation</artifactId>
+		    <version>${victools.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.github.victools</groupId>
+		    <artifactId>jsonschema-module-javax-validation</artifactId>
+		    <version>${victools.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.strategicgains</groupId>
