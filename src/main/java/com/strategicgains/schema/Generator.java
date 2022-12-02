@@ -184,7 +184,7 @@ public class Generator
 		System.out.println("Usage: generator [-r <read-only properties>][-w <write-only properties>][-u <base URL>][-o <output directory>] jar-filename fully-qualified-classname [...]");
 		System.out.println("\t-a <annotation provider> is one of: javax, jakarta, jackson, syntaxe (default).");
 		System.out.println("\t-o <output directory> is the destination for schemas, especially if there are more-than one being generated at once. Otherwise, stdout is used.");
-		System.out.println("\t-r <read-only properties> is a comma-separated string of property names to mark read-only in schema. Default is 'id', 'createdAt' and 'updatedAt'.");
+		System.out.println("\t-r <read-only properties> is a comma-separated string of property names to mark read-only in schema.");
 		System.out.println("\t-u <base URL> is a fully-qualified URL where the schema will end up living (used for $id). Must include the trailing '/'. Default is 'https://schema.autheus.com/.");
 		System.out.println("\t-w <write-only properties> is a comma-separated string of property names to mark write-only in schema.");
 		System.out.println("\tjar-filename can be a directory of classes or an actual jar file.");

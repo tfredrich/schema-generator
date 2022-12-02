@@ -9,7 +9,7 @@ schema-generator [-a <annotation provider>][-o <output directory>][-r <read-only
 
 * __-a__ specifies the annotation provider for Java models. It is one of: javax, jakarta, jackson, syntaxe (default).
 * __-o__ specifies the destination directory for schemas, especially if there are more-than one being generated at once. Otherwise, stdout is used.
-* __-r__ defines additional read-only properties. It is a comma-separated string of property names to mark read-only in output schemas (surround with quotation marks if including spaces). Defaults include 'id', 'createdAt' and 'updatedAt'.
+* __-r__ defines read-only properties. It is a comma-separated string of property names to mark read-only in output schemas (surround with quotation marks if including spaces).
 * __-u__ specifies the base URL for identifiers and references. It is a fully-qualified URL where the schema will end up living (used for $id). Must include the trailing '/'. Default is 'https://schema.autheus.com/.
 * __-w__ defines write-only properties. It is a comma-separated string of property names to mark write-only in output schemas (surround with quotation marks if including spaces).
 * __jar-filename__ can be a directory of classes (e.g. './target/classes/') or an actual jar file (e.g. './target/foo.jar').
@@ -109,7 +109,7 @@ extends Base<UUID>
 Running the command:
 
 ``` bash
-schema-generator -u http://www.example.com/ ./target/test-classes com.example.Sample
+schema-generator -u http://www.example.com/ -r \"createdAt, updatedAt\" ./target/test-classes com.example.Sample
 ```
 
 Produces a JSON schema as follows:

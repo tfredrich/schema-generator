@@ -36,13 +36,8 @@ implements AnnotationProvider
 			e.printStackTrace();
 		}
 	};
-	private static final String[] DEFAULT_READONLY_PROPERTIES = {
-			"id",
-			"createdAt",
-			"updatedAt"
-	};
 	private URL baseUrl;
-	private Set<String> readOnlyProperties = new HashSet<>(Arrays.asList(DEFAULT_READONLY_PROPERTIES));
+	private Set<String> readOnlyProperties = new HashSet<>();
 	private Set<String> writeOnlyProperties = new HashSet<>();
 
 	public SyntaxeAnnotationProvider()
