@@ -4,7 +4,7 @@ A command-line tool to generate JSON schema from .class files that leverage Synt
 
 ## Usage
 ```
-schema-generator [-o <output directory>][-r <read-only properties>][-u <base URL>][-w <write-only properties>] jar-filename fully-qualified-classname [...]
+schema-generator [-a <annotation provider>][-o <output directory>][-r <read-only properties>][-u <base URL>][-w <write-only properties>] jar-filename fully-qualified-classname [...]
 ```
 
 * __-a__ specifies the annotation provider for Java models. It is one of: javax, jakarta, jackson, syntaxe (default).
