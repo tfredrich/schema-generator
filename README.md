@@ -29,13 +29,13 @@ public enum AnEnumeration
 ```
 Running the following command:
 
-```
+``` bash
 schema-generator -u http://www.example.com/ ./target/test-classes com.example.AnEnumeration
 ```
 
 Produces:
 
-```
+``` json
 {
   "$schema" : "https://json-schema.org/draft/2020-12/schema",
   "type" : "string",
@@ -48,7 +48,7 @@ Produces:
 
 Here is an example with a more complex class structure with inheritance hierarchies and class-based properties:
 
-```java
+``` java
 public abstract class Base<T>
 {
 	@Required
@@ -107,13 +107,13 @@ extends Base<UUID>
 ```
 Running the command:
 
-```
+``` bash
 schema-generator -u http://www.example.com/ ./target/test-classes com.example.Sample
 ```
 
 Produces a JSON schema as follows:
 
-```
+``` json
 {
   "$schema" : "https://json-schema.org/draft/2020-12/schema",
   "$defs" : {
