@@ -7,6 +7,7 @@ A command-line tool to generate JSON schema from .class files that leverage Synt
 schema-generator [-o <output directory>][-r <read-only properties>][-u <base URL>][-w <write-only properties>] jar-filename fully-qualified-classname [...]
 ```
 
+* __-a__ specifies the annotation provider for Java models. It is one of: javax, jakarta, jackson, syntaxe (default).
 * __-o__ specifies the destination directory for schemas, especially if there are more-than one being generated at once. Otherwise, stdout is used.
 * __-r__ defines additional read-only properties. It is a comma-separated string of property names to mark read-only in output schemas (surround with quotation marks if including spaces). Defaults include 'id', 'createdAt' and 'updatedAt'.
 * __-u__ specifies the base URL for identifiers and references. It is a fully-qualified URL where the schema will end up living (used for $id). Must include the trailing '/'. Default is 'https://schema.autheus.com/.
