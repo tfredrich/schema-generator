@@ -52,10 +52,18 @@ public class Generator
 		Generator generator = createGenerator(commandLine);
 
 		String[] arguments = commandLine.getArguments();
-		if (arguments.length < 2) usage();
+		if (arguments.length < 2)
+		{
+			System.out.println("Too few arguments. Jar-filename and fully-qualified classname(s) required.");
+			usage();
+		}
 
 		File file = new File(arguments[0]);
-		if (!file.canRead()) usage();
+		if (!file.canRead())
+		{
+			System.out.println("Cannot read file: " + arguments[0]);
+			usage();
+		}
 
 		File outputDir = ensureOutputDirectory(commandLine.getOptionArgument('o'));
 		URLClassLoader cl = null;
@@ -181,7 +189,7 @@ public class Generator
 
 	private static void usage()
 	{
-		System.out.println("Usage: generator [-r <read-only properties>][-w <write-only properties>][-u <base URL>][-o <output directory>] jar-filename fully-qualified-classname [...]");
+		System.out.println("Usage: generator [-a <annotation provider>][-r <read-only properties>][-w <write-only properties>][-u <base URL>][-o <output directory>] jar-filename fully-qualified-classname [...]");
 		System.out.println("\t-a <annotation provider> is one of: javax, jakarta, jackson, syntaxe (default).");
 		System.out.println("\t-o <output directory> is the destination for schemas, especially if there are more-than one being generated at once. Otherwise, stdout is used.");
 		System.out.println("\t-r <read-only properties> is a comma-separated string of property names to mark read-only in schema.");
