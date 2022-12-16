@@ -7,42 +7,42 @@ import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
 public class SyntaxeModule
 implements ModuleWrapper
 {
-	private static final SyntaxeAnnotationProvider SYNTAXE_PROVIDER = new SyntaxeAnnotationProvider();
+	private SyntaxeAnnotationProvider provider = new SyntaxeAnnotationProvider();
 
 	@Override
 	public void applyToConfigBuilder(SchemaGeneratorConfigBuilder builder)
 	{
 		builder.forTypesInGeneral()
-			.withIdResolver(SYNTAXE_PROVIDER::getId)
-			.withDescriptionResolver(SYNTAXE_PROVIDER::getDescription)
-			.withTitleResolver(SYNTAXE_PROVIDER::getTitle);
+			.withIdResolver(provider::getId)
+			.withDescriptionResolver(provider::getDescription)
+			.withTitleResolver(provider::getTitle);
 		builder.forFields()
-			.withStringFormatResolver(SYNTAXE_PROVIDER::getFormat)
-			.withArrayMaxItemsResolver(SYNTAXE_PROVIDER::getMaxItems)
-			.withArrayMinItemsResolver(SYNTAXE_PROVIDER::getMinItems)
-			.withNumberInclusiveMaximumResolver(SYNTAXE_PROVIDER::getMaxValue)
-			.withNumberInclusiveMinimumResolver(SYNTAXE_PROVIDER::getMinValue)
-			.withStringMaxLengthResolver(SYNTAXE_PROVIDER::getMaxLength)
-			.withStringMinLengthResolver(SYNTAXE_PROVIDER::getMinLength)
-			.withStringPatternResolver(SYNTAXE_PROVIDER::getPattern)
-			.withRequiredCheck(SYNTAXE_PROVIDER::isRequired)
-			.withReadOnlyCheck(SYNTAXE_PROVIDER::isReadOnly)
-			.withWriteOnlyCheck(SYNTAXE_PROVIDER::isWriteOnly);
+			.withStringFormatResolver(provider::getFormat)
+			.withArrayMaxItemsResolver(provider::getMaxItems)
+			.withArrayMinItemsResolver(provider::getMinItems)
+			.withNumberInclusiveMaximumResolver(provider::getMaxValue)
+			.withNumberInclusiveMinimumResolver(provider::getMinValue)
+			.withStringMaxLengthResolver(provider::getMaxLength)
+			.withStringMinLengthResolver(provider::getMinLength)
+			.withStringPatternResolver(provider::getPattern)
+			.withRequiredCheck(provider::isRequired)
+			.withReadOnlyCheck(provider::isReadOnly)
+			.withWriteOnlyCheck(provider::isWriteOnly);
 	}
 
 	public void withReadOnlyProperties(String[] names)
 	{
-		SYNTAXE_PROVIDER.withReadOnlyProperties(names);
+		provider.withReadOnlyProperties(names);
 	}
 
 	public void withWriteOnlyProperties(String[] names)
 	{
-		SYNTAXE_PROVIDER.withWriteOnlyProperties(names);
+		provider.withWriteOnlyProperties(names);
 	}
 
 	public void withBaseUrl(String baseUrl)
 	throws MalformedURLException
 	{
-		SYNTAXE_PROVIDER.withBaseUrl(baseUrl);
+		provider.withBaseUrl(baseUrl);
 	}
 }

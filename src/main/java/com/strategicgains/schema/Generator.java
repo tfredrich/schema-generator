@@ -19,11 +19,6 @@ import com.github.victools.jsonschema.module.javax.validation.JavaxValidationMod
 
 public class Generator
 {
-	private static final ModuleWrapper SYNTAXE = new SyntaxeModule();
-	private static final ModuleWrapper JACKSON = new ModuleWrapperImpl(new JacksonModule());
-	private static final ModuleWrapper JAKARTA = new ModuleWrapperImpl(new JakartaValidationModule());
-	private static final ModuleWrapper JAVAX = new ModuleWrapperImpl(new JavaxValidationModule());
-
 	private GeneratorConfig config;
 
 	public Generator(GeneratorConfig config)
@@ -35,15 +30,28 @@ public class Generator
 	public static void main(String[] args)
 	throws CommandLineException, IOException
 	{
-		GeneratorConfig config = GeneratorConfig.parseArgs(args);
-		Generator generator = new Generator(config);
-		generator.generate();
+		try
+		{
+			GeneratorConfig config = GeneratorConfig.parseArgs(args);
+			Generator generator = new Generator(config);			
+			generator.generate();
+		}
+		catch (Exception e)
+		{
+			System.out.println(e.getMessage());
+			usage();
+		}
 	}
 
 	public void generate()
 	throws MalformedURLException
 	{
-		if (!config.getJarFile().canRead()) usage();
+		if (!config.getJarFile().canRead())
+		{
+			System.out.println("Cannot read file: " + config.getJarFile().getName());
+			usage();
+		}
+
 		File outputDirectory = ensureOutputDirectory(config.getOutputPath());
 		ModuleWrapper module = determineModule(config.getAnnotationProvider());
 		module.withBaseUrl(config.getBaseUrl());
@@ -85,18 +93,18 @@ public class Generator
 
 	private ModuleWrapper determineModule(String provider)
 	{
-		if (provider == null) return SYNTAXE;
+		if (provider == null) return new SyntaxeModule();
 
 		switch(provider.toLowerCase())
 		{
 			case "javax":
-				return JAVAX;
+				return new ModuleWrapperImpl(new JavaxValidationModule());
 			case "jakarta":
-				return JAKARTA;
+				return new ModuleWrapperImpl(new JakartaValidationModule());
 			case "jackson":
-				return JACKSON;
+				return new ModuleWrapperImpl(new JacksonModule());
 			case "syntaxe":
-				return SYNTAXE;
+				return new SyntaxeModule();
 
 			default: throw new RuntimeException("Unknown annotation provider: " + provider);
 		}
