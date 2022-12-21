@@ -4,10 +4,8 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.victools.jsonschema.generator.FieldScope;
@@ -80,12 +78,9 @@ implements AnnotationProvider
 	@Override
 	public String getFormat(FieldScope scope)
 	{
-		if (scope.getType().isInstanceOf(UUID.class))
-			return "uuid";
-		if (scope.getType().isInstanceOf(Date.class))
-			return "date-time";
-		return null;
+		return FormatMapper.getFormatFor(scope.getType().getErasedType());
 	}
+
 	@Override
 	public Integer getMaxItems(FieldScope scope)
 	{
