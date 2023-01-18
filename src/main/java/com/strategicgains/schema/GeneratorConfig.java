@@ -3,6 +3,7 @@ package com.strategicgains.schema;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class GeneratorConfig
@@ -123,6 +124,10 @@ public class GeneratorConfig
 		{
 			return withReadOnlyProperties(commaSeparated.split(",\\s*"));
 		}
+		else
+		{
+			this.readOnlyProperties = Collections.emptyList();
+		}
 
 		return this;
 	}
@@ -131,7 +136,7 @@ public class GeneratorConfig
 	{
 		if (propertyNames == null)
 		{
-			readOnlyProperties = null;
+			readOnlyProperties = Collections.emptyList();
 			return this;
 		}
 
@@ -155,6 +160,10 @@ public class GeneratorConfig
 		{
 			return withWriteOnlyProperties(commaSeparated.split(",\\s*"));
 		}
+		else
+		{
+			this.writeOnlyProperties = Collections.emptyList();
+		}
 
 		return this;
 	}
@@ -163,7 +172,7 @@ public class GeneratorConfig
 	{
 		if (propertyNames == null)
 		{
-			writeOnlyProperties = null;
+			writeOnlyProperties = Collections.emptyList();
 			return this;
 		}
 

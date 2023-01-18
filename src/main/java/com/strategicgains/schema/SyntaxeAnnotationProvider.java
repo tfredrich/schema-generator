@@ -60,12 +60,13 @@ implements AnnotationProvider
 	public SyntaxeAnnotationProvider withBaseUrl(String baseUrl)
 	throws MalformedURLException
 	{
-		return withBaseUrl(new URL(baseUrl));
+		if (baseUrl != null) withBaseUrl(new URL(baseUrl));
+		return this;
 	}
 
 	public SyntaxeAnnotationProvider withBaseUrl(URL baseUrl)
 	{
-		this.baseUrl = baseUrl;
+		if (baseUrl != null) this.baseUrl = baseUrl;
 		return this;
 	}
 
@@ -76,19 +77,19 @@ implements AnnotationProvider
 
 	public SyntaxeAnnotationProvider withPath(String path)
 	{
-		this.path = path;
+		if (path != null) this.path = path;
 		return this;
 	}
 
 	public SyntaxeAnnotationProvider withReadOnlyProperties(String[] readOnlyProperties)
 	{
-		this.readOnlyProperties.addAll(Arrays.asList(readOnlyProperties));
+		if (readOnlyProperties != null) this.readOnlyProperties.addAll(Arrays.asList(readOnlyProperties));
 		return this;
 	}
 
 	public SyntaxeAnnotationProvider withWriteOnlyProperties(String[] writeOnlyProperties)
 	{
-		this.writeOnlyProperties.addAll(Arrays.asList(writeOnlyProperties));
+		if (writeOnlyProperties != null) this.writeOnlyProperties.addAll(Arrays.asList(writeOnlyProperties));
 		return this;
 	}
 
