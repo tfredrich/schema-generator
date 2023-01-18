@@ -55,6 +55,7 @@ public class Generator
 		File outputDirectory = ensureOutputDirectory(config.getOutputPath());
 		ModuleWrapper module = determineModule(config.getAnnotationProvider());
 		module.withBaseUrl(config.getBaseUrl());
+		module.withBasePath(config.getBasePath());
 		module.withReadOnlyProperties(config.getReadOnlyProperties().toArray(new String[0]));
 		module.withWriteOnlyProperties(config.getWriteOnlyProperties().toArray(new String[0]));
 		SchemaGeneratorConfigBuilder builder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2020_12, OptionPreset.PLAIN_JSON)

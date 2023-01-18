@@ -35,6 +35,7 @@ implements AnnotationProvider
 		}
 	};
 	private URL baseUrl;
+	private String path;
 	private Set<String> readOnlyProperties = new HashSet<>();
 	private Set<String> writeOnlyProperties = new HashSet<>();
 
@@ -51,6 +52,11 @@ implements AnnotationProvider
 		withBaseUrl(baseUrl);
 	}
 
+	public String getBaseUrl()
+	{
+		return (baseUrl != null ? baseUrl.toString() : "");
+	}
+
 	public SyntaxeAnnotationProvider withBaseUrl(String baseUrl)
 	throws MalformedURLException
 	{
@@ -60,6 +66,17 @@ implements AnnotationProvider
 	public SyntaxeAnnotationProvider withBaseUrl(URL baseUrl)
 	{
 		this.baseUrl = baseUrl;
+		return this;
+	}
+
+	public String getPath()
+	{
+		return (path != null ? path : "");
+	}
+
+	public SyntaxeAnnotationProvider withPath(String path)
+	{
+		this.path = path;
 		return this;
 	}
 
@@ -213,11 +230,12 @@ implements AnnotationProvider
 			return s.getSimpleTypeDescription();
 		return null;
 	}
+
 	@Override
 	public String getId(TypeScope s)
 	{
 		if (!FieldScope.class.isAssignableFrom(s.getClass()))
-			return baseUrl + s.getSimpleTypeDescription() + ".json";
+			return getBaseUrl() + getPath() + s.getSimpleTypeDescription() + ".json";
 		return null;
 	}
 }

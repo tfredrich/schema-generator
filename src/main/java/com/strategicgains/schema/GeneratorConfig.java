@@ -7,11 +7,12 @@ import java.util.List;
 
 public class GeneratorConfig
 {
-	private static final String COMMAND_STRING = "a~o~r~u~w~";
+	private static final String COMMAND_STRING = "a~o~p~r~u~w~";
 	private static final CommandLine COMMAND_LINE_PARSER = new CommandLine(COMMAND_STRING);
 
 	private String annotationProvider;
 	private String baseUrl;
+	private String basePath;
 	private String outputPath;
 	private List<String> readOnlyProperties;
 	private List<String> writeOnlyProperties;
@@ -26,6 +27,7 @@ public class GeneratorConfig
 		config.withAnnotationProvider(commandLine.getOptionArgument('a'));
 		config.withOutputPath(commandLine.getOptionArgument('o'));
 		config.withBaseUrl(commandLine.getOptionArgument('u'));
+		config.withBasePath(commandLine.getOptionArgument('p'));
 		config.withReadOnlyProperties(commandLine.getOptionArgument('r'));
 		config.withWriteOnlyProperties(commandLine.getOptionArgument('w'));
 		String[] arguments = commandLine.getArguments();
@@ -47,6 +49,17 @@ public class GeneratorConfig
 
 	public GeneratorConfig withAnnotationProvider(String providerName)
 	{
+		return this;
+	}
+
+	public String getBasePath()
+	{
+		return basePath;
+	}
+
+	public GeneratorConfig withBasePath(String basePath)
+	{
+		this.basePath = basePath;
 		return this;
 	}
 

@@ -10,6 +10,8 @@ extends Module
 	void withReadOnlyProperties(String[] names);
 
 	void withWriteOnlyProperties(String[] names);
+	
+	void withBasePath(String basePath);
 
 	void withBaseUrl(String baseUrl)
 	throws MalformedURLException;

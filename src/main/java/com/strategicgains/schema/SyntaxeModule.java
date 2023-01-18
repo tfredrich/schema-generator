@@ -40,6 +40,12 @@ implements ModuleWrapper
 		provider.withWriteOnlyProperties(names);
 	}
 
+	@Override
+	public void withBasePath(String basePath)
+	{
+		provider.withPath(basePath);
+	}
+
 	public void withBaseUrl(String baseUrl)
 	throws MalformedURLException
 	{

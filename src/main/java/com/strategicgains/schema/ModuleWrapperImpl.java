@@ -41,6 +41,13 @@ implements ModuleWrapper
 	}
 
 	@Override
+	public void withBasePath(String basePath)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
 	public void withBaseUrl(String baseUrl) throws MalformedURLException
 	{
 		// TODO Auto-generated method stub
