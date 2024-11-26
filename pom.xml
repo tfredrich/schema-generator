@@ -38,7 +38,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.strategicgains</groupId>
-			<artifactId>syntaxe</artifactId>
+			<artifactId>Syntaxe</artifactId>
 			<version>1.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
