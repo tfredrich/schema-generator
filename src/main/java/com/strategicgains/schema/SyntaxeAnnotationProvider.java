@@ -2,6 +2,8 @@ package com.strategicgains.schema;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -16,24 +18,29 @@ import com.strategicgains.syntaxe.annotation.DoubleValidation;
 import com.strategicgains.syntaxe.annotation.FloatValidation;
 import com.strategicgains.syntaxe.annotation.IntegerValidation;
 import com.strategicgains.syntaxe.annotation.LongValidation;
+import com.strategicgains.syntaxe.annotation.ReadOnly;
 import com.strategicgains.syntaxe.annotation.Required;
 import com.strategicgains.syntaxe.annotation.StringValidation;
+import com.strategicgains.syntaxe.annotation.WriteOnly;
 
 public class SyntaxeAnnotationProvider
 implements AnnotationProvider
 {
-	private static URL DEFAULT_BASE_URL;
+	private static final String DEFAULT_BASE_URL = "https://schema.agenteux.com/";
+
+	private static URL defaultBaseUrl;
 	static
 	{
 		try
 		{
-			DEFAULT_BASE_URL = new URL("https://schema.autheus.com/");
+			defaultBaseUrl = new URI(DEFAULT_BASE_URL).toURL();
 		}
-		catch (MalformedURLException e)
+		catch (MalformedURLException | URISyntaxException e)
 		{
 			e.printStackTrace();
 		}
 	};
+
 	private URL baseUrl;
 	private String path;
 	private Set<String> readOnlyProperties = new HashSet<>();
@@ -42,11 +49,11 @@ implements AnnotationProvider
 	public SyntaxeAnnotationProvider()
 	{
 		super();
-		withBaseUrl(DEFAULT_BASE_URL);
+		withBaseUrl(defaultBaseUrl);
 	}
 
 	public SyntaxeAnnotationProvider(String baseUrl)
-	throws MalformedURLException
+	throws MalformedURLException, URISyntaxException
 	{
 		this();
 		withBaseUrl(baseUrl);
@@ -58,9 +65,9 @@ implements AnnotationProvider
 	}
 
 	public SyntaxeAnnotationProvider withBaseUrl(String baseUrl)
-	throws MalformedURLException
+	throws MalformedURLException, URISyntaxException
 	{
-		if (baseUrl != null) withBaseUrl(new URL(baseUrl));
+		if (baseUrl != null) withBaseUrl(new URI(baseUrl).toURL());
 		return this;
 	}
 
@@ -187,13 +194,11 @@ implements AnnotationProvider
 	{
 		if (readOnlyProperties.contains(scope.getDeclaredName())) return true;
 
-//		ReadOnly readOnly = scope.getAnnotation(ReadOnly.class);
-//		if (readOnly != null) return true;
-
 		JsonProperty annotation = scope.getAnnotation(JsonProperty.class);
 		if (annotation != null) return JsonProperty.Access.READ_ONLY.equals(annotation.access());
 
-		return false;
+		ReadOnly readOnly = scope.getAnnotation(ReadOnly.class);
+		return (readOnly != null);
 	}
 
 	/**
@@ -207,11 +212,11 @@ implements AnnotationProvider
 	{
 		if (writeOnlyProperties.contains(scope.getDeclaredName())) return true;
 
-//		WriteOnly writeOnly = scope.getAnnotation(WriteOnly.class);
-//		if (writeOnly != null) return true;
-
 		JsonProperty annotation = scope.getAnnotation(JsonProperty.class);
 		if (annotation != null) return JsonProperty.Access.WRITE_ONLY.equals(annotation.access());
+
+		WriteOnly writeOnly = scope.getAnnotation(WriteOnly.class);
+		if (writeOnly != null) return true;
 
 		return false;
 	}

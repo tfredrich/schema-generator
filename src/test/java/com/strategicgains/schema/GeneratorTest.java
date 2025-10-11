@@ -2,6 +2,7 @@ package com.strategicgains.schema;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class GeneratorTest
 
 	@Test
 	public void testViaConfig()
-	throws CommandLineException, MalformedURLException
+	throws CommandLineException, MalformedURLException, URISyntaxException
 	{
 		String[] args = {"-u", "http://www.example.com/", "-r", "foo,bar,bat,createdAt,updatedAt", "-w", "sys,boom,bah", "./target/test-classes", "com.strategicgains.schema.Sample", "com.strategicgains.schema.AnEnumeration"};
 

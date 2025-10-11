@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
@@ -44,7 +45,7 @@ public class Generator
 	}
 
 	public void generate()
-	throws MalformedURLException
+	throws MalformedURLException, URISyntaxException
 	{
 		if (!config.getJarFile().canRead())
 		{

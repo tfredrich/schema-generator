@@ -1,6 +1,7 @@
 package com.strategicgains.schema;
 
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 
 import com.github.victools.jsonschema.generator.Module;
 
@@ -14,5 +15,5 @@ extends Module
 	void withBasePath(String basePath);
 
 	void withBaseUrl(String baseUrl)
-	throws MalformedURLException;
+	throws MalformedURLException, URISyntaxException;
 }
