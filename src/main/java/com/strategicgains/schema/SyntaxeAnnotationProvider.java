@@ -156,6 +156,11 @@ implements AnnotationProvider
 	@Override
 	public boolean isRequired(FieldScope scope)
 	{
+		return isAnnotatedRequired(scope) && !isReadOnly(scope);
+	}
+
+	private boolean isAnnotatedRequired(FieldScope scope)
+	{
 		Required r = scope.getAnnotation(Required.class);
 		if (r != null) return true;
 
