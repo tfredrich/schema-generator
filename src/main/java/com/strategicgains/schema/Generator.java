@@ -76,8 +76,7 @@ public class Generator
 		}
 		catch(Exception e)
 		{
-			System.out.println("Error: " + e.getMessage());
-			e.printStackTrace();
+			System.out.println(String.format("Error: %s: %s", e.getClass(), e.getMessage()));
 			System.exit(1);
 		}
 		finally
