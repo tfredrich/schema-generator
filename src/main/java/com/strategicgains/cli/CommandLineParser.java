@@ -15,10 +15,7 @@
 */
 package com.strategicgains.cli;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -41,26 +38,15 @@ import java.util.Set;
  */
 public class CommandLineParser
 {
-	// SECTION: CONSTANTS
-
 	private static final String PARAMETER_REQUIRED = "Parameter required for option: ";
 	private static final String INVALID_OPTION = "Invalid command line option: ";
 	private static final char ARGUMENT_INDICATOR = '~';
 	private static final char SWITCH_CHARACTER = '-';
 
-	
-	// SECTION: INSTANCE VARIABLES
-
 	private String pattern;
 	private Set<Character> patternSwitches;
 	private Set<Character> patternOptions;
-	private List<String> arguments;
-	private HashMap<Character, String> optionArguments;
-	private Set<Character> setSwitches;
-
 	
-	// SECTION: CONSTRUCTORS
-
 	/**
 	 * Constructs a new CommandLineParser instance using the pattern.
 	 */
@@ -69,9 +55,6 @@ public class CommandLineParser
 		super();
 		setPattern(pattern);
 	}
-
-	
-	// SECTION: ACCESSORS/MUTATORS
 
 	/**
 	 * Method: setPattern()
@@ -109,12 +92,10 @@ public class CommandLineParser
 		}
 	}
 
-	public CommandLineParser parse(String[] args)
+	public CommandLine parse(String[] args)
 	throws CommandLineParserException
 	{
-		optionArguments = new HashMap<>();
-		arguments = new ArrayList<>();
-		setSwitches = new HashSet<>();
+		CommandLine.Builder builder = new CommandLine.Builder();
 
 		if (args != null)
 		{
@@ -131,7 +112,7 @@ public class CommandLineParser
 
 						if (patternSwitches.contains(option)) // switch setting
 						{
-							setSwitches.add(option);
+							builder.withSwitch(option);
 						}
 						else if (patternOptions.contains(option)) // parameter required
 						{
@@ -140,12 +121,12 @@ public class CommandLineParser
 								throw new CommandLineParserException(INVALID_OPTION + arg);
 							}
 
-							if (i + 1 >= args.length)
+							if (i + 1 >= args.length || args[i + 1].charAt(0) == SWITCH_CHARACTER)
 							{
-								throw new CommandLineParserException(PARAMETER_REQUIRED + arg);
+								throw new CommandLineParserException(PARAMETER_REQUIRED + option);
 							}
 
-							optionArguments.put(option, args[++i]);
+							builder.withOption(option, args[++i]);
 						}
 						else
 						{
@@ -156,34 +137,12 @@ public class CommandLineParser
 				else
 				// not option argument, plain old argument.
 				{
-					arguments.add(arg);
+					builder.withArgument(arg);
 				}
 			}
 		}
 		
-		return this;
-	}
-
-	public boolean isOptionSet(char optionToken)
-	{
-		Character option = Character.valueOf(optionToken);
-		return (setSwitches.contains(option) || optionArguments.containsKey(option));
-	}
-
-	public String getOptionArgument(char optionToken)
-	{
-		return optionArguments.get(Character.valueOf(optionToken));
-	}
-
-	public boolean hasOptionArgumentFor(char optionToken)
-	{
-		return (getOptionArgument(optionToken) != null);
-	}
-
-	public String[] getArguments()
-	{
-		String[] strings = new String[arguments.size()];
-		return arguments.toArray(strings);
+		return builder.build();
 	}
 
 	/**
