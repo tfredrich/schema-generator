@@ -1,3 +1,18 @@
+/*
+    Copyright 2003-2025, Strategic Gains, Inc.
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+*/
 package com.strategicgains.cli;
 
 import java.util.ArrayList;
@@ -28,6 +43,8 @@ public class CommandLineParser
 {
 	// SECTION: CONSTANTS
 
+	private static final String PARAMETER_REQUIRED = "Parameter required for option: ";
+	private static final String INVALID_OPTION = "Invalid command line option: ";
 	private static final char ARGUMENT_INDICATOR = '~';
 	private static final char SWITCH_CHARACTER = '-';
 
@@ -120,21 +137,19 @@ public class CommandLineParser
 						{
 							if (arg.length() > 2)
 							{
-								throw new CommandLineParserException(
-								    "Invalid command line option: " + arg);
+								throw new CommandLineParserException(INVALID_OPTION + arg);
 							}
 
 							if (i + 1 >= args.length)
 							{
-								throw new CommandLineParserException(
-								    "Parameter required for option: " + arg);
+								throw new CommandLineParserException(PARAMETER_REQUIRED + arg);
 							}
 
 							optionArguments.put(option, args[++i]);
 						}
 						else
 						{
-							throw new CommandLineParserException("Invalid command line option: " + option);
+							throw new CommandLineParserException(INVALID_OPTION + option);
 						}
 					}
 				}
