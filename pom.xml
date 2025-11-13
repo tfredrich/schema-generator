@@ -3,7 +3,7 @@
 
 	<groupId>com.strategicgains</groupId>
 	<artifactId>CommandLine</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Command-Line Parsing Utilities</name>
@@ -120,7 +120,7 @@
 		<connection>scm:git:git@github.com:tfredrich/CommandLine.git</connection>
 		<developerConnection>
 			scm:git:git@github.com:tfredrich/schema-generator.git</developerConnection>
-		<tag>CommandLine-1.0.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<developers>
